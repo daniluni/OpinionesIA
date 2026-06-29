@@ -1,0 +1,37 @@
+@media(max-width:480px){
+  .header-brand span{display:none}
+  .tab-btn{font-size:.8rem;gap:2px}
+  .modal{width:100%;max-width:100%;min-height:100vh;border-radius:0}
+  .table td,.table th{padding:6px var(--space-xs);font-size:.8rem}
+}
+@media print{
+  .header,.tab-bar,.btn,.modal-overlay{display:none!important}
+  .view{display:block!important;padding:0}
+  .card,.chart-container,.table-wrapper{box-shadow:none;border:1px solid #ddd}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:0s!important;animation-duration:0s!important}
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-bg:#0f172a;
+    --color-surface:#1e293b;
+    --color-header:#6d28d9;
+    --color-header-text:#ffffff;
+    --color-text:#f1f5f9;
+    --color-text-secondary:#94a3b8;
+    --color-border:#334155;
+    --color-shadow:rgba(0,0,0,0.3);
+  }
+  .estado-badge--activa{background:#064e3b;color:#6ee7b7}
+  .estado-badge--cerrada{background:#1e293b;color:#94a3b8}
+  .tipo-badge--brainstorming{background:#3b0764;color:#c084fc}
+  .tipo-badge--retrospectiva{background:#1e3a5f;color:#93c5fd}
+  .tipo-badge--evaluacion{background:#4a0e4e;color:#f9a8d4}
+  .table th{background:#1e293b}
+  .table tr:hover td{background:#334155}
+  .table tr.selected td{background:#1e1b4b}
+  .idea-card,.cluster-item,.ranking-item{background:#1e293b}
+  .minoria-card{background:linear-gradient(135deg,#3b0764,#1e293b)}
+  .insight-card{background:#1e293b}
+}

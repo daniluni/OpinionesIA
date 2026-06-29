@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpinionesIA</title>
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="header">
+    <a href="../index.html" style="color:inherit;text-decoration:none;opacity:.7;font-size:.85rem;white-space:nowrap;margin-right:var(--space-md)">← Volver</a>
+  <div class="header-brand">🧠 OpinionesIA</div>
+</header>
+
+<nav class="tab-bar">
+  <button class="tab-btn" data-tab="0">📊 Dashboard</button>
+  <button class="tab-btn" data-tab="1">💡 Sesiones</button>
+  <button class="tab-btn" data-tab="2">🧠 Análisis IA</button>
+</nav>
+
+<!-- ===== VISTA DASHBOARD ===== -->
+<div class="view active" id="dashboard-view">
+  <div class="dashboard-grid">
+    <div class="card card--total" id="dash-total"><div class="card-label">Sesiones Creadas</div><div class="card-value">0</div></div>
+    <div class="card card--ideas" id="dash-ideas"><div class="card-label">Ideas Registradas</div><div class="card-value">0</div></div>
+    <div class="card card--activas" id="dash-activas"><div class="card-label">Sesiones Activas</div><div class="card-value">0</div></div>
+    <div class="card card--participacion" id="dash-participacion"><div class="card-label">Índice Participación</div><div class="card-value">0</div></div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-container">
+      <div class="chart-title">Sesiones por Tipo</div>
+      <canvas id="chart-dona-tipo"></canvas>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Ideas por Sesión</div>
+      <canvas id="chart-barras-ses"></canvas>
+    </div>
+  </div>
+  <div>
+    <div class="section-title">🧠 Resumen IA Global</div>
+    <div id="dash-insights"></div>
+  </div>
+</div>
+
+<!-- ===== VISTA SESIONES ===== -->
+<div class="view" id="sesiones-view">
+  <div class="sesiones-header">
+    <button class="btn btn--primary" id="sesion-nuevo-btn">+ Nueva Sesión</button>
+  </div>
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Ideas</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="sesiones-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Detalle de sesión seleccionada -->
+  <div class="sesion-detalle hidden" id="sesion-detalle">
+    <div class="chart-container">
+      <div class="flex-between">
+        <div class="section-title" id="sesion-detalle-title" style="margin-bottom:0"></div>
+        <button class="btn btn--primary btn--sm" id="sesion-analizar-btn">🧠 Analizar con IA</button>
+      </div>
+      <div class="sesion-meta" id="sesion-meta"></div>
+
+      <!-- Formulario de idea anónima -->
+      <div class="idea-form hidden" id="idea-form">
+        <textarea id="idea-contenido" placeholder="Escribe tu idea u opinión anónimamente..."></textarea>
+        <button class="btn btn--primary" id="idea-btn">💡 Aportar Idea</button>
+      </div>
+
+      <!-- Lista de ideas -->
+      <div class="section-title" style="font-size:var(--font-size-md)">💬 Ideas Aportadas (<span id="idea-count">0</span>)</div>
+      <div id="ideas-lista"></div>
+
+      <!-- Análisis IA (oculto hasta ejecutar) -->
+      <div class="analisis-section hidden" id="sesion-analisis">
+        <div class="section-title" style="border-top:2px solid var(--color-border);padding-top:var(--space-lg)">🧠 Resultados del Análisis IA</div>
+        <div id="analisis-clusters"></div>
+        <div id="analisis-top" style="margin-top:var(--space-lg)"></div>
+        <div id="analisis-minorias" style="margin-top:var(--space-lg)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== VISTA ANÁLISIS IA ===== -->
+<div class="view" id="analisis-view">
+  <div class="analisis-filtro flex-between">
+    <div style="display:flex;gap:var(--space-sm);align-items:flex-end;flex-wrap:wrap">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" for="analisis-filtro-sesion">Filtrar por sesión</label>
+        <select class="form-select" id="analisis-filtro-sesion" style="min-width:200px"></select>
+      </div>
+      <button class="btn btn--primary" id="analisis-ejecutar-btn">▶️ Ejecutar Análisis IA</button>
+    </div>
+  </div>
+
+  <div id="analisis-clusters-global"></div>
+  <div id="analisis-ranking-global" style="margin-top:var(--space-lg)"></div>
+  <div id="analisis-minorias-global" style="margin-top:var(--space-lg)"></div>
+  <div id="analisis-sentimiento-global" style="margin-top:var(--space-lg)">
+    <div class="section-title">😊 Distribución de Sentimiento</div>
+    <div class="chart-container">
+      <canvas id="chart-sentimiento"></canvas>
+    </div>
+  </div>
+  <div id="analisis-recomendaciones" style="margin-top:var(--space-lg)"></div>
+</div>
+
+<!-- ===== MODAL SESIÓN ===== -->
+<div class="modal-overlay" id="sesion-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Nueva Sesión</h2>
+      <button class="modal-close">&times;</button>
+    </div>
+    <form id="sesion-form">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="ses-titulo">Título *</label>
+          <input type="text" class="form-input" id="ses-titulo" placeholder="Ej: Lluvia de Ideas — Mejora Continua" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ses-descripcion">Descripción</label>
+          <textarea class="form-textarea" id="ses-descripcion" placeholder="Contexto de la sesión"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="ses-tipo">Tipo</label>
+            <select class="form-select" id="ses-tipo">
+              <option value="brainstorming">Brainstorming</option>
+              <option value="retrospectiva">Retrospectiva</option>
+              <option value="evaluacion">Evaluación</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ses-estado">Estado</label>
+            <select class="form-select" id="ses-estado">
+              <option value="activa">Activa</option>
+              <option value="cerrada">Cerrada</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ses-tema">Temas clave</label>
+          <input type="text" class="form-input" id="ses-tema" placeholder="Ej: automatización, procesos, equipo">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn--ghost">Cancelar</button>
+        <button type="submit" class="btn btn--primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/store.js"></script>
+<script src="js/models.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ai-engine.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/sesiones.js"></script>
+<script src="js/analisis.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
